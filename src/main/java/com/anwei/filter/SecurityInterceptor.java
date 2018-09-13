@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.anwei.common.enums.ResultCode;
 import com.anwei.common.result.Result;
-import com.anwei.entity.AcctUser;
 
 /**
  * 1.此拦截器用于拦截所有请求，用于登录权限验证
@@ -33,7 +32,6 @@ public class SecurityInterceptor implements HandlerInterceptor{
        
         
         String method = request.getMethod();
-        System.out.println(method);
         /* CSRF
         if (method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("DELETE") || method.equalsIgnoreCase("PUT")) {
             String csrf_token = request.getParameter("csrf_token");
@@ -49,7 +47,7 @@ public class SecurityInterceptor implements HandlerInterceptor{
                 }
             }
         }*/
-        
+        System.err.println("XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With")));
         HttpSession session = request.getSession();
         if (session.getAttribute("current_user") == null) {
             System.out.println("AuthorizationException:未登录！"+request.getMethod());

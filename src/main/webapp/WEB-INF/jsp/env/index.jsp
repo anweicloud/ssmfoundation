@@ -16,6 +16,7 @@ function ajaxException() {
         url : "env/ajax",
         dataType : "json",
         success : function(data) {
+        	console.log(data)
             alert(data.msg)
         },
         async : true
