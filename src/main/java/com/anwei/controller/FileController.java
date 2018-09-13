@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.anwei.common.util.UrlUtil;
+import com.anwei.common.web.UrlUtil;
 import com.anwei.entity.file.FileMeta;
 
 /**
