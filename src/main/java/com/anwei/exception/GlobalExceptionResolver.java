@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.anwei.common.enums.ResultCode;
 import com.anwei.common.result.Result;
+import com.anwei.common.web.HttpUtil;
  
 /**
  * spring mvc 全局处理异常捕获 根据请求区分ajax和普通请求，分别进行响应.
@@ -41,17 +42,11 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 	 */
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex) {
-        boolean isajax = isAjax(request);
+        boolean isajax = HttpUtil.isAjax(request);
         System.out.println(isajax);
         Throwable deepestException = deepestException(ex);
         return processException(request, response, handler, deepestException, isajax);
 	}
-	/**
-	 * 判断当前请求是否为异步请求.
-	 */
-	private boolean isAjax(HttpServletRequest request) {
-        return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
-    }
 	
 	/**
 	 * 获取最原始的异常出处，即最初抛出异常的地方
@@ -120,9 +115,10 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 			HttpServletResponse response, Object handler,
 			Throwable deepestException){
 		ModelAndView empty = new ModelAndView();
-		//response.setContentType("application/json");
+//		response.setContentType("application/json;charset=utf-8");
 		response.setHeader("Cache-Control", "no-store");
 		Result result = Result.failure(ResultCode.SYSTEM_INNER_ERROR);
+		System.out.println(JSON.toJSONString(result));
 		PrintWriter pw = null;
 		try {
 			pw=response.getWriter();

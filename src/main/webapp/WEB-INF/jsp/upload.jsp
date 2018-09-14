@@ -43,9 +43,7 @@
     <div id="dropzone">Drop files here</div>
     
     <div class="progress">
-	  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-	    0%
-	  </div>
+	  <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"> 0% </div>
 	</div>
  
     <table id="uploaded-files" class="table">
@@ -67,6 +65,9 @@ $(function () {
         dataType: 'json',
  
         done: function (e, data) {
+        	
+        	console.log(data, ' done')
+        	
             $("tr:has(td)").remove();
             $.each(data.result, function (index, file) {
  
@@ -78,6 +79,12 @@ $(function () {
                         .append($('<td/>').html("<a href='file/get/"+index+"'>Click</a>"))
                         )//end $("#uploaded-files").append()
             }); 
+        },
+        
+        fail: function(e, data) {
+        	console.log(data.errorThrown, 'fial')
+        	console.log(data.textStatus, 'fial')
+        	console.log(data.jqXHR, 'fial')
         },
  
         progressall: function (e, data) {

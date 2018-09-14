@@ -13,25 +13,23 @@
 	function login() {
 		$.ajax({
 	        type : "get",
-	        url : "auth.pub",
+	        url : "pub/auth",
 	        dataType : "json",
 	        success : function(data) {
-	        	console.log(data)
+	        	console.log(data, typeof data)
 	            alert(data.msg)
 	        },
-	        async : true
 	    });
 	}
 	function logout() {
 		$.ajax({
 	        type : "get",
-	        url : "out.pub",
+	        url : "pub/logout",
 	        dataType : "json",
 	        success : function(data) {
 	        	console.log(data)
 	            alert(data.msg)
-	        },
-	        async : true
+	        }
 	    });
 	}
 </script>

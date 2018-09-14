@@ -1,51 +1,60 @@
 package com.anwei.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.anwei.common.result.Result;
 
+@RequestMapping("pub")
 @Controller
 public class LoginController {
 	
 	@RequestMapping("login")
-	public String login() {
+	public String login(String str) {
+		System.out.println(">>>>>>>>>>>>>>>>> " + str);
 		return "login";
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="auth.pub")
-	public String auth(HttpServletRequest req) {
+	@RequestMapping(value="auth")
+	public Result auth(HttpServletRequest req) {
 		System.out.println("auth");
 		req.getSession().setAttribute("current_user", "admin");
-		System.out.println(JSON.toJSONString(Result.success()));
-		return JSON.toJSONString(Result.success());
+		return Result.success();
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="str.pub")
-	public String str(HttpServletRequest req) {
-		return "Hello World ! <a href=\"#\">你好世界！</a>";
-	}
-	
-	@ResponseBody
-	@RequestMapping(value="out.pub", produces={"text/json; charset=utf-8"})
-	public String out(HttpServletRequest req) {
-		System.out.println("auth");
+	@RequestMapping(value="logout")
+	public Result logout(HttpServletRequest req) {
+		System.out.println("logout");
 		req.getSession().invalidate();
-		System.out.println(JSON.toJSONString(Result.success()));
-		return JSON.toJSONString(Result.success());
+		return Result.success();
 	}
 	
-	@RequestMapping("register")
+	@RequestMapping("reg")
 	public String register() {
 		return "reg";
 	}
 	
+	@ResponseBody
+	@RequestMapping(value="reg2")
+	public Map<String, Object> reg2() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("code", 1);
+		map.put("msg", "Success 你好");
+		return map;
+	}
 	
+	@ResponseBody
+	@RequestMapping("reg3")
+	public Result reg3() {
+		return Result.success("Heoo");
+	}
 	
 }

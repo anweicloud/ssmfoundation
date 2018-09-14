@@ -19,6 +19,8 @@ Welcome!
 			error: function(data) { console.log(data);console.log('error') },
 			success: function(data) {
 				console.log(data)
+				alert(data.msg);
+				window.location.href='pub/login';
 			}
 		});
 	}

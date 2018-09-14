@@ -7,5 +7,10 @@
 </head>
 <body>
 注册系统！
+<script>
+$.getJSON('pub/reg2',{}, function(d) {
+	console.log(d)
+})
+</script>
 </body>
 </html>

@@ -9,7 +9,7 @@ import java.net.URLEncoder;
  * @author Anwei
  * @date 2018年1月12日
  */
-public class UrlUtil {
+public class URLUtil {
     private final static String ENCODE = "UTF-8"; 
     
     public static String decoder(String str) {

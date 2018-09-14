@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.anwei.common.web.UrlUtil;
+import com.anwei.common.web.URLUtil;
 import com.anwei.entity.file.FileMeta;
 
 /**
@@ -73,7 +73,7 @@ public class FileController {
                 fileMeta.setBytes(mpf.getBytes());
  
                  // copy file to local disk (make sure the path "e.g. D:/temp/files" exists)            
-                 FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream("C:/tmp/files/"+mpf.getOriginalFilename()));
+                 FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream("/tmp/files/"+mpf.getOriginalFilename()));
  
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -115,13 +115,6 @@ public class FileController {
 		return mav;
 	}
     
-    
-    @RequestMapping( value="page2", method=RequestMethod.GET )
-    public ModelAndView page2() {
-    	ModelAndView mav = new ModelAndView("/views/upload");
-    	return mav;
-    }
-    
     @RequestMapping( value="download", method=RequestMethod.GET )
     public void download(HttpServletResponse response) {  
         try {
@@ -134,7 +127,7 @@ public class FileController {
             	ext = filename.substring(filename.lastIndexOf("."));
             System.out.println(ext);
             
-            filename = UrlUtil.encoder(filename); // 支持中文文件名
+            filename = URLUtil.encoder(filename); // 支持中文文件名
             
             // 以流的形式下载文件。  
             InputStream fis = new BufferedInputStream(new FileInputStream(filePath));  

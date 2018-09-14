@@ -1,18 +1,11 @@
 package com.anwei.filter;
-import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.anwei.common.enums.ResultCode;
-import com.anwei.common.network.IpUtils;
-import com.anwei.common.result.Result;
 import com.anwei.common.web.HttpUtil;
 
 /**
@@ -23,17 +16,16 @@ import com.anwei.common.web.HttpUtil;
  */
 
 @Component
-public class SecurityInterceptor implements HandlerInterceptor{
+public class VisitorInterceptor implements HandlerInterceptor{
 //    @Autowired
 //    SysUserRolePermService sysUserRolePermService;
 	
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        System.out.println("SecurityInterceptor preHandle:"+request.getContextPath()+","+request.getRequestURI()+","+request.getMethod());
+        System.out.println("VisitorInterceptor preHandle:"+request.getContextPath()+","+request.getRequestURI()+","+request.getMethod());
        
-        String ip = IpUtils.getRemoteAddr(request);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>> ip: " + ip);
+        
         String method = request.getMethod();
         /* CSRF
         if (method.equalsIgnoreCase("POST") || method.equalsIgnoreCase("DELETE") || method.equalsIgnoreCase("PUT")) {
@@ -51,27 +43,21 @@ public class SecurityInterceptor implements HandlerInterceptor{
             }
         }*/
         System.err.println(HttpUtil.isAjax(request));
-        HttpSession session = request.getSession();
+//        HttpSession session = request.getSession();
+        /*
         if (session.getAttribute("current_user") == null) {
             System.out.println("AuthorizationException:未登录！"+request.getMethod());
-            if (HttpUtil.isAjax(request)) {
-            	System.err.println("Ajax>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            	response.setContentType("application/json; charset=utf-8");
+            if("POST".equalsIgnoreCase(method) || HttpUtil.isAjax(request)) {
+                response.setContentType("text/html; charset=utf-8");  
                 PrintWriter out = response.getWriter();
                 out.write(JSON.toJSONString(Result.failure(ResultCode.USER_NOT_LOGGED_IN)));
                 out.flush();
                 out.close();
-            } else if("POST".equalsIgnoreCase(method) || HttpUtil.isAjax(request)) {
-                response.setContentType("text/html; charset=utf-8");  
-                PrintWriter out = response.getWriter();
-                out.write("<h1>请先登录</h1>");
-                out.flush();
-                out.close();
-            } else {
-                response.sendRedirect(request.getContextPath()+"/pub/login"); 
+            }else{
+                response.sendRedirect(request.getContextPath()+"/login"); 
             }
             return false;
-        }
+        }*/
         
 //        AcctUser user = (AcctUser) session.getAttribute("current_user");
         // 验证权限
