@@ -115,21 +115,7 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 			HttpServletResponse response, Object handler,
 			Throwable deepestException){
 		ModelAndView empty = new ModelAndView();
-//		response.setContentType("application/json;charset=utf-8");
-		response.setHeader("Cache-Control", "no-store");
-		Result result = Result.failure(ResultCode.SYSTEM_INNER_ERROR);
-		System.out.println(JSON.toJSONString(result));
-		PrintWriter pw = null;
-		try {
-			pw=response.getWriter();
-			pw.write( JSON.toJSONString(result) );
-			pw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			pw.close();
-		}
-		
+		HttpUtil.responeWriter(response, Result.failure(ResultCode.SYSTEM_INNER_ERROR));
 		empty.clear();
 		return empty;
 	}

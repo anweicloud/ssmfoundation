@@ -7,3 +7,4 @@
 %>
 <%@include file="tag.jsp" %>
 <%@include file="bootstrap.jsp" %>
+<c:set var="basePath" value="${pageContext.request.contextPath}"/>

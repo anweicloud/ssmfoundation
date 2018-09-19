@@ -50,18 +50,16 @@ public class SecurityInterceptor implements HandlerInterceptor{
                 }
             }
         }*/
-        System.err.println(HttpUtil.isAjax(request));
         HttpSession session = request.getSession();
         if (session.getAttribute("current_user") == null) {
             System.out.println("AuthorizationException:未登录！"+request.getMethod());
             if (HttpUtil.isAjax(request)) {
-            	System.err.println("Ajax>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             	response.setContentType("application/json; charset=utf-8");
                 PrintWriter out = response.getWriter();
                 out.write(JSON.toJSONString(Result.failure(ResultCode.USER_NOT_LOGGED_IN)));
                 out.flush();
                 out.close();
-            } else if("POST".equalsIgnoreCase(method) || HttpUtil.isAjax(request)) {
+            } else if("POST".equalsIgnoreCase(method)) {
                 response.setContentType("text/html; charset=utf-8");  
                 PrintWriter out = response.getWriter();
                 out.write("<h1>请先登录</h1>");

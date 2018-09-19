@@ -1,46 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
-	<!-- 启用shrio授权注解拦截方式 -->
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-		<!-- 装配 securityManager -->
-		<property name="securityManager" ref="securityManager" />
-		<!-- 配置登陆页面 -->
-		<property name="loginUrl" value="/index.jsp" />
-		<!-- 登陆成功后的一面 -->
-		<property name="successUrl" value="/jsp/success.jsp" />
-		<property name="unauthorizedUrl" value="/jsp/unauthorized.jsp" />
-		<!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截. -->
-		<property name="filterChainDefinitions">
-			<value>
-				/index.jsp=anon
-				/jsp/success.jsp=anon
-				/jsp/fail.jsp=anon
-				/jsp/user.jsp = roles[user]
-				/jsp/admin.jsp = roles[admin]
-				/logout = logout
-			</value>
-		</property>
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+	
+	<!-- 定义缓存管理器 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+	
+	<!-- 用户缓存 -->
+	<!-- 
+	<bean id="customShiroCacheManager" class="com.sojson.core.shiro.cache.impl.CustomShiroCacheManager">
+	    <property name="shiroCacheManager" ref="jedisShiroCacheManager"/>
+	</bean> -->
+	
+	<!-- shiro 缓存实现，对ShiroCacheManager，我是采用redis的实现 -->
+	<!-- 
+	<bean id="jedisShiroCacheManager" class="com.sojson.core.shiro.cache.impl.JedisShiroCacheManager">
+	    <property name="jedisManager" ref="jedisManager"/>
+	</bean> -->
+	<!-- redis 的缓存 -->
+	<!-- 
+	<bean id="jedisManager" class="com.sojson.core.shiro.cache.JedisManager">
+	    <property name="jedisPool" ref="jedisPool"/>
+	</bean> -->
+	
+
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- session的失效时长30分钟，单位毫秒，不配置默认1800000ms -->
+		<property name="globalSessionTimeout" value="1800000" />
+		<!-- 删除失效的session -->
+		<property name="deleteInvalidSessions" value="true" />
+		
+		<property name="sessionIdUrlRewritingEnabled" value="false" />
 	</bean>
 
 	<!-- 配置缓存管理器 -->
-	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<!-- 指定 ehcache 的配置文件 -->
-		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
-	</bean>
+	<!-- 
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"> 
+	    <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" /> 
+	</bean> -->
+	
+	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
 	<!-- 配置进行授权和认证的 Realm -->
-	<bean id="myRealm" class="com.anwei.base.shiro.ShiroDbRealm">
-		<property name="userService" ref="userService" />
-	</bean>
-	<bean id="userService" class="com.anwei.service.impl.UserServiceImpl" />
-	<!-- 配置 Shiro 的 SecurityManager Bean. -->
+	<bean id="myRealm" class="com.anwei.security.realm.MyRealm" /> 
+		
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="cacheManager" ref="cacheManager" />
 		<property name="realm" ref="myRealm" />
-		<property name="sessionMode" value="native">
-		</property>
+		<property name="sessionMode" value="native" />
 	</bean>
+	
+	<!-- 启用shrio授权注解拦截方式 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 装配 securityManager -->
+        <property name="securityManager" ref="securityManager" />
+        <!-- 配置登陆页面 -->
+        <property name="loginUrl" value="/login" />
+        <!-- 登陆成功后的一面 -->
+        <property name="successUrl" value="/success" />
+        <property name="unauthorizedUrl" value="/jsp/unauthorized.jsp" />
+        <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截. -->
+        <property name="filterChainDefinitions">
+            <value>
+                <!-- 范围小、精准的url放上面，越粗略越往下 -->
+                /assets/** = anon
+                /login = anon
+                /login2 = anon
+                /reg = anon
+                /shiro = anon
+                /logout = logout
+                /pay/** = authc
+                /** = user
+                
+                <!-- 
+                anon:例子/admins/**=anon 没有参数，表示可以匿名使用。
+                authc:例如/admins/user/**=authc表示需要认证(登录)才能使用，没有参数
+                roles：例子/admins/user/**=roles[admin],参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，当有多个参数时，例如admins/user/**=roles["admin,guest"],每个参数通过才算通过，相当于hasAllRoles()方法。
+                perms：例子/admins/user/**=perms[user:add:*],参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，例如/admins/user/**=perms["user:add:*,user:modify:*"]，当有多个参数时必须每个参数都通过才通过，想当于isPermitedAll()方法。
+                rest：例子/admins/user/**=rest[user],根据请求的方法，相当于/admins/user/**=perms[user:method] ,其中method为post，get，delete等。
+                port：例子/admins/user/**=port[8081],当请求的url的端口不是8081是跳转到schemal://serverName:8081?queryString,其中schmal是协议http或https等，serverName是你访问的host,8081是url配置里port的端口，queryString 是你访问的url里的？后面的参数。
+                authcBasic：例如/admins/user/**=authcBasic没有参数表示httpBasic认证
+                ssl:例子/admins/user/**=ssl没有参数，表示安全的url请求，协议为https
+                user:例如/admins/user/**=user没有参数表示必须存在用户，当登入操作时不做检查
+                -->
+                
+            </value>
+        </property>
+    </bean>
+	
 	<!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 </beans>

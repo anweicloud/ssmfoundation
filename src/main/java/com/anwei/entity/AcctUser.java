@@ -26,6 +26,9 @@ public class AcctUser implements Serializable {
 	private Date registerTime;
 
 	private String telephone;
+	private String password;
+	
+	private int status;
 
 	public AcctUser() {
 	}
@@ -62,4 +65,21 @@ public class AcctUser implements Serializable {
 		this.telephone = telephone;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	
 }

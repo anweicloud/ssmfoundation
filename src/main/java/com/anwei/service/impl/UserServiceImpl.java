@@ -66,7 +66,15 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public AcctUser findByUserName(String username) {
+		return genericDao.findObject("from AcctUser where nickName = ?", username);
+	}
+
+	@Override
+	public AcctUser login(String username, String password) {
+		return genericDao.findObject("from AcctUser where nickName = ? and password=?", username, password);
+	}
 	
-	
- 
 }

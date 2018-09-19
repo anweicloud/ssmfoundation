@@ -15,7 +15,11 @@ public interface UserService {
 	AcctUser load(int id);
  
 	AcctUser get(String id);
- 
+	
+	AcctUser findByUserName(String username);
+	
+	AcctUser login(String username, String password);
+	
 	List<AcctUser> findAll();
  
 	void persist(AcctUser entity);

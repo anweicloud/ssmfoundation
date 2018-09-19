@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.anwei.entity.AcctUser;
+import com.anwei.entity.common.GenericResult;
 import com.anwei.exception.CustomException;
 import com.anwei.service.UserService;
  
@@ -44,6 +45,14 @@ public class UserController {
 		LOGGER.info("查询用户全部用户");
 		List<AcctUser> userInfos = userService.findAll();
 		return userInfos;
+	}
+	
+	@RequestMapping("gr")
+	public @ResponseBody GenericResult<List<AcctUser>> gr(){
+		LOGGER.info("查询用户全部用户");
+		GenericResult<List<AcctUser>> re = new GenericResult<List<AcctUser>>("001", "操作成功");
+		re.setData(userService.findAll());
+		return re;
 	}
 	
 	@RequestMapping( value="reg", method=RequestMethod.GET )

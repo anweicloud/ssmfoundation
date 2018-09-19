@@ -1,5 +1,8 @@
 package com.anwei.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,4 +24,11 @@ public class RestApiController {
 		return Result.success("你好 RestFull");
 	}
 	
+	@RequestMapping(value="map")
+	public Map<String, Object> map() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("code", 1);
+		map.put("msg", "Success 你好");
+		return map;
+	}
 }

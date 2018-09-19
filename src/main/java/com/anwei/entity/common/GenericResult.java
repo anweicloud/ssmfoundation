@@ -13,6 +13,8 @@ public class GenericResult<T> implements Serializable {
 	private String message;
 	private T data;
 
+	public GenericResult() {}
+	
 	public GenericResult(String code, String message) {
 		super();
 		this.code = code;
