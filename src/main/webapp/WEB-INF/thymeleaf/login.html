@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="thymeleaf/common/fragments :: head(title=${B})"></head>
+<style>
+html, body, #wrap {height: 100%;}
+body > #wrap {height: auto; min-height: 100%;}
+#main {padding-bottom: 75px;} /* 使用和footer相同的高度,可根据页面做微调 */
+#footer {position: relative;height: 75px;clear:both; margin-top: -75px; /* footer高度的负值 */ 
+    color: #99979c;
+    text-align: center;
+    background-color: #2a2730;
+    line-height: 75px;
+    border-top: 3px solid linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+}
+.clearfix:after {content: "";display: block;height: 0;clear: both;visibility: hidden;}
+</style>
+<body>
+<div th:replace="thymeleaf/common/fragments :: navbar"></div>
+<p th:text="${#calendars.format(today,'dd MMMM yyyy')}"></p>
+<div id="wrap" class="container">
+    <div id="main" class="row clearfix">
+        <div class="col-md-12 column">
+            <form role="form" class="" action="shiro" method="post">
+                <div class="form-group">
+                     <label for="exampleInputEmail1">UserName</label>
+                     <input type="text" class="form-control" id="exampleInputEmail1" name="username" />
+                </div>
+                <div class="form-group">
+                     <label for="exampleInputPassword1">Password</label>
+                     <input type="password" class="form-control" id="exampleInputPassword1" name="password"/>
+                </div>
+                <div class="checkbox">
+                     <label><input type="checkbox" />Remember me !</label>
+                </div> 
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <p class="alert alert-danger" th:text="${msg}"> </p>
+        </div>
+    </div>
+</div>
+
+<div id="footer" class="" th:include="thymeleaf/common/fragments :: copyright"></div>
+</body>
+</html>

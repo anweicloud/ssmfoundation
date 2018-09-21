@@ -3,7 +3,7 @@ package com.anwei.service;
 import java.io.Serializable;
 import java.util.List;
 
-import com.anwei.entity.AcctUser;
+import com.anwei.entity.permission.User;
  
 /**
  * 
@@ -12,21 +12,21 @@ import com.anwei.entity.AcctUser;
  *
  */
 public interface UserService {
-	AcctUser load(int id);
+	User load(int id);
  
-	AcctUser get(String id);
+	User get(String id);
 	
-	AcctUser findByUserName(String username);
+	User findByUserName(String username);
 	
-	AcctUser login(String username, String password);
+	User login(String username, String password);
 	
-	List<AcctUser> findAll();
+	List<User> findAll();
  
-	void persist(AcctUser entity);
+	void persist(User entity);
  
-	Serializable save(AcctUser entity);
+	Serializable save(User entity);
  
-	void saveOrUpdate(AcctUser entity);
+	void saveOrUpdate(User entity);
  
 	void delete(String id);
  

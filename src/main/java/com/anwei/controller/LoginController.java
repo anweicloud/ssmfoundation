@@ -1,11 +1,14 @@
 package com.anwei.controller;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
@@ -18,27 +21,31 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.anwei.common.enums.ResultCode;
 import com.anwei.common.result.Result;
 import com.anwei.common.web.HttpUtil;
 
 @Controller
-public class LoginController {
+public class LoginController extends BaseController {
 	
 	@RequestMapping("login")
 	public String login(String str, Model model) {
-		model.addAttribute("msg", "Hello thymeleaf");
-		return "login";
+		model.addAttribute("msg", "Hello thymeleaf 你好");
+		model.addAttribute("today", Calendar.getInstance(Locale.CHINA));
+		return thymeleaf("login");
 	}
 	
 	@RequestMapping("login2")
 	public String loginJSP(String str) {
-		return "login2";
+		return jsp("login2");
 	}
 	
 	/**
@@ -68,7 +75,7 @@ public class LoginController {
 	public String success(Model model) {
 		model.addAttribute("currentUser", SecurityUtils.getSubject().getSession().getAttribute("currentUser"));
 		model.addAttribute("currentTime", DateFormatUtils.format(Calendar.getInstance(Locale.CHINA), "yyyy/MM/dd HH:mm:ss"));
-		return "success";
+		return jsp("success");
 	}
 	
 	/**
@@ -94,9 +101,20 @@ public class LoginController {
             
             if (subject.isAuthenticated()) {  
             	System.out.println("验证通过");
+            	
+            	/**
+    			 * shiro 获取登录之前的地址
+    			 */
+//    			SavedRequest savedRequest = WebUtils.getSavedRequest(req);
+//    			String url = null ;
+//    			if(null != savedRequest){
+//    				url = savedRequest.getRequestUrl();
+//    				return url;
+//    			}
+    			
             	return "redirect:./success";  
             } else {  
-                return "login";  
+                return thymeleaf("login");
             }  
         // 以下catch中的异常来自MyReaml中的手动抛出异常，是依据一定的条件抛出指定异常。例如if(u>10) throw new ExcessiveAttemptsException();
         } catch (IncorrectCredentialsException e) {  
@@ -124,8 +142,42 @@ public class LoginController {
 		} else {
 			// 跳转至jsp并带入提示信息
 			model.addAttribute("msg", msg);
-			return "login";
+			return thymeleaf("login");
 		}
+	}
+	
+
+	@RequestMapping("rdt")
+	public ModelAndView rdt(String A, String AA) {
+		System.out.println(A + ' ' + AA);
+		ModelAndView modelAndView = new ModelAndView(thymeleaf("rdt"));
+		modelAndView.addObject("A", A);
+		modelAndView.addObject("B", AA);
+		return modelAndView;
+	}
+	
+	@RequestMapping("rdt1")
+	public ModelAndView rdt1() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("A", 123);
+		map.put("AA", "重定向咯");
+		return redirect("rdt", map);
+	}
+	
+	@RequestMapping("mavTh")
+	public ModelAndView modelAndView() {
+		ModelAndView modelAndView = new ModelAndView(thymeleaf("mavTh"));
+		modelAndView.addObject("A", 123);
+		modelAndView.addObject("B", "重定向咯");
+		return modelAndView;
+	}
+	
+	@RequestMapping("mavJsp")
+	public ModelAndView mavJsp() {
+		ModelAndView modelAndView = new ModelAndView(jsp("mavJsp"));
+		modelAndView.addObject("A", 123);
+		modelAndView.addObject("B", "重定向咯");
+		return modelAndView;
 	}
 	
 }

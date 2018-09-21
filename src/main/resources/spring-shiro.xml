@@ -17,12 +17,26 @@
 	<bean id="jedisShiroCacheManager" class="com.sojson.core.shiro.cache.impl.JedisShiroCacheManager">
 	    <property name="jedisManager" ref="jedisManager"/>
 	</bean> -->
-	<!-- redis 的缓存 -->
-	<!-- 
-	<bean id="jedisManager" class="com.sojson.core.shiro.cache.JedisManager">
-	    <property name="jedisPool" ref="jedisPool"/>
-	</bean> -->
 	
+	<!-- session 创建、删除、查询 -->
+    <bean id="jedisShiroSessionRepository" class="com.anwei.shiro.session.JedisShiroSessionRepository" >
+         <property name="jedisManager" ref="jedisManager"/>
+    </bean>
+    
+	<!-- session 校验单个用户是否多次登录 -->
+    <bean id="kickoutSessionFilter" class="com.anwei.shiro.filter.KickoutSessionFilter">  
+        <property name="kickoutUrl" value="/login?kickout"/>  
+    </bean>  
+    <!-- 静态注入 jedisShiroSessionRepository-->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="com.anwei.shiro.filter.KickoutSessionFilter.setShiroSessionRepository"/>
+        <property name="arguments" ref="jedisShiroSessionRepository"/>
+    </bean>
+	
+	<!-- redis 的缓存 -->
+    <bean id="jedisManager" class="com.anwei.shiro.cache.JedisManager">
+        <property name="jedisPool" ref="jedisPool"/>
+    </bean>
 
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<!-- session的失效时长30分钟，单位毫秒，不配置默认1800000ms -->
@@ -41,7 +55,7 @@
 	
 	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
 	<!-- 配置进行授权和认证的 Realm -->
-	<bean id="myRealm" class="com.anwei.security.realm.MyRealm" /> 
+	<bean id="myRealm" class="com.anwei.shiro.realm.MyRealm" /> 
 		
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="cacheManager" ref="cacheManager" />
@@ -57,7 +71,7 @@
         <property name="loginUrl" value="/login" />
         <!-- 登陆成功后的一面 -->
         <property name="successUrl" value="/success" />
-        <property name="unauthorizedUrl" value="/jsp/unauthorized.jsp" />
+        <property name="unauthorizedUrl" value="/unauthorized" />
         <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截. -->
         <property name="filterChainDefinitions">
             <value>
@@ -68,7 +82,9 @@
                 /reg = anon
                 /shiro = anon
                 /logout = logout
+                /user/** = kickout,authc
                 /pay/** = authc
+                /rest/** = authc,perms[admin]
                 /** = user
                 
                 <!-- 
@@ -85,6 +101,12 @@
                 
             </value>
         </property>
+        
+        <property name="filters">
+           <map>
+              <entry key="kickout" value-ref="kickoutSessionFilter"></entry>
+           </map>
+       </property>
     </bean>
 	
 	<!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->

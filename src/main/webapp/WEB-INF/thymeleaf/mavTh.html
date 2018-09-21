@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="thymeleaf/common/fragments :: head(title=${B})">
+</head>
+<body>
+Thymeleaf 页面 
+<p th:text="${A}"></p>
+<p th:text="${B}"></p>
+<p th:text="#{mess}"></p>
+a啊
+<div th:include="thymeleaf/common/fragments :: copyright"></div> 
+</body>
+</html>

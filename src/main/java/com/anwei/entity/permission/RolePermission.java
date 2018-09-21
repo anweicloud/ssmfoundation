@@ -14,20 +14,21 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "access_user_role")
-@NamedQuery(name = "UserRole.findAll", query = "SELECT a FROM UserRole a")
-public class UserRole implements Serializable {
-	private static final long serialVersionUID = 1L;
+@Table(name = "access_role_permission")
+@NamedQuery(name = "RolePermission.findAll", query = "SELECT a FROM RolePermission a")
+public class RolePermission implements Serializable {
+	
+	private static final long serialVersionUID = 9052372091159868163L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	private long user_id;
+	private long perm_id;
 	
 	private long role_id;
 
-	public UserRole() {
+	public RolePermission() {
 	}
 	
 	public long getId() {
@@ -38,12 +39,12 @@ public class UserRole implements Serializable {
 		this.id = id;
 	}
 
-	public long getUser_id() {
-		return user_id;
+	public long getPerm_id() {
+		return perm_id;
 	}
 
-	public void setUser_id(long user_id) {
-		this.user_id = user_id;
+	public void setPerm_id(long perm_id) {
+		this.perm_id = perm_id;
 	}
 
 	public long getRole_id() {

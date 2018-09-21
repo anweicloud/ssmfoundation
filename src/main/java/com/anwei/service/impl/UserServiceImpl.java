@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anwei.dao.GenericDao;
-import com.anwei.entity.AcctUser;
+import com.anwei.entity.permission.User;
 import com.anwei.service.UserService;
  
 /**
@@ -20,37 +20,37 @@ import com.anwei.service.UserService;
 public class UserServiceImpl implements UserService {
  
 	@Autowired
-	private GenericDao<AcctUser, ?> genericDao;
+	private GenericDao<User, ?> genericDao;
 
 	@Override
-	public AcctUser load(int id) {
-		return genericDao.load(AcctUser.class, id);
+	public User load(int id) {
+		return genericDao.load(User.class, id);
 	}
 
 	@Override
-	public AcctUser get(String id) {
+	public User get(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<AcctUser> findAll() {
-		return genericDao.findList(AcctUser.class);
+	public List<User> findAll() {
+		return genericDao.findList(User.class);
 	}
 
 	@Override
-	public void persist(AcctUser entity) {
+	public void persist(User entity) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Serializable save(AcctUser entity) {
+	public Serializable save(User entity) {
 		return genericDao.save(entity);
 	}
 
 	@Override
-	public void saveOrUpdate(AcctUser entity) {
+	public void saveOrUpdate(User entity) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -68,13 +68,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public AcctUser findByUserName(String username) {
-		return genericDao.findObject("from AcctUser where nickName = ?", username);
+	public User findByUserName(String username) {
+		return genericDao.findObject("from User where nickName = ?", username);
 	}
 
 	@Override
-	public AcctUser login(String username, String password) {
-		return genericDao.findObject("from AcctUser where nickName = ? and password=?", username, password);
+	public User login(String username, String password) {
+		return genericDao.findObject("from User where username = ? and password=?", username, password);
 	}
 	
 }

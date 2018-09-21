@@ -1,5 +1,7 @@
-package com.anwei.security.realm;  
+package com.anwei.shiro.realm;  
   
+import java.util.Set;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.shiro.SecurityUtils;
@@ -15,10 +17,13 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.anwei.entity.AcctUser;
+import com.anwei.entity.permission.User;
+import com.anwei.service.PermissionService;
+import com.anwei.service.RoleService;
 import com.anwei.service.UserService;  
   
 /** 
@@ -31,6 +36,10 @@ public class MyRealm extends AuthorizingRealm {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private PermissionService permService;
 	
 	public MyRealm() {
 		super();
@@ -46,10 +55,10 @@ public class MyRealm extends AuthorizingRealm {
         //获取基于用户名和密码的令牌  
         //实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的  
         //两个token的引用都是一样的,本例中是org.apache.shiro.authc.UsernamePasswordToken@33799a1e  
-        UsernamePasswordToken token = (UsernamePasswordToken) authcToken;  
+        UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         System.out.println("验证当前Subject时获取到token为" + ReflectionToStringBuilder.toString(token, ToStringStyle.MULTI_LINE_STYLE));  
         
-        AcctUser user = userService.login(token.getUsername(), new String(token.getPassword()));
+        User user = userService.login(token.getUsername(), new String(token.getPassword()));
         
         // 根据不同的情况抛出不同的异常，达到指定的错误文字提示
         if(null == user){
@@ -81,18 +90,18 @@ public class MyRealm extends AuthorizingRealm {
     @Override  
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){  
         //获取当前登录的用户名,等价于(String)principals.fromRealm(this.getName()).iterator().next()  
-        String currentUsername = (String)super.getAvailablePrincipal(principals);  
-        System.out.println("认证成功！这里是授权：" + currentUsername);
+    	User user = (User) super.getAvailablePrincipal(principals);
+    	System.out.println("认证成功！这里是授权：" + user.getUsername());
 
         SimpleAuthorizationInfo authorInfo = new SimpleAuthorizationInfo();  
-        //实际中可能会像上面注释的那样从数据库取得  
         
+        long userId = user.getId();
         //根据用户ID查询角色（role），放入到Authorization里。使用Set去重
-//		Set<String> roles = roleService.findRoleByUserId(userId);
-//		authorInfo.setRoles(roles);
+		Set<String> roles = roleService.findRoleByUserId(userId);
+		authorInfo.setRoles(roles);
 		//根据用户ID查询权限（permission），放入到Authorization里。也就是url
-//		Set<String> permissions = permissionService.findPermissionByUserId(userId);
-//		authorInfo.setStringPermissions(permissions);
+		Set<String> permissions = permService.findPermissionByUserId(userId);
+		authorInfo.setStringPermissions(permissions);
 		return authorInfo;
     }  
       
@@ -110,5 +119,21 @@ public class MyRealm extends AuthorizingRealm {
             }  
         }  
     }  
+    
+    /**
+     * 清空当前用户权限信息
+     */
+	public void clearCachedAuthorizationInfo() {
+		PrincipalCollection principalCollection = SecurityUtils.getSubject().getPrincipals();
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principalCollection, getName());
+		super.clearCachedAuthorizationInfo(principals);
+	}
+	/**
+	 * 指定principalCollection 清除
+	 */
+	public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principalCollection, getName());
+		super.clearCachedAuthorizationInfo(principals);
+	}
 }
  

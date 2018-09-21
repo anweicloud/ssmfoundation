@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.anwei.entity.AcctUser;
 import com.anwei.entity.common.GenericResult;
+import com.anwei.entity.permission.User;
 import com.anwei.exception.CustomException;
 import com.anwei.service.UserService;
  
@@ -35,22 +35,22 @@ public class UserController {
 	@RequestMapping("showInfo/{userId}")
 	public String showUserInfo(ModelMap modelMap, @PathVariable int userId){
 		LOGGER.info("查询用户：" + userId);
-		AcctUser userInfo = userService.load(userId);
+		User userInfo = userService.load(userId);
 		modelMap.addAttribute("userInfo", userInfo);
 		return "user/showInfo";
 	}
 	
 	@RequestMapping("showInfos")
-	public @ResponseBody List<AcctUser> showUserInfos(){
+	public @ResponseBody List<User> showUserInfos(){
 		LOGGER.info("查询用户全部用户");
-		List<AcctUser> userInfos = userService.findAll();
+		List<User> userInfos = userService.findAll();
 		return userInfos;
 	}
 	
 	@RequestMapping("gr")
-	public @ResponseBody GenericResult<List<AcctUser>> gr(){
+	public @ResponseBody GenericResult<List<User>> gr(){
 		LOGGER.info("查询用户全部用户");
-		GenericResult<List<AcctUser>> re = new GenericResult<List<AcctUser>>("001", "操作成功");
+		GenericResult<List<User>> re = new GenericResult<List<User>>("001", "操作成功");
 		re.setData(userService.findAll());
 		return re;
 	}

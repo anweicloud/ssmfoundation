@@ -2,7 +2,11 @@ package com.anwei.entity.permission;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.alibaba.fastjson.JSON;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * The persistent class for the acct_user database table.
@@ -20,9 +24,16 @@ public class Role implements Serializable {
 
 	private String name;
 	
+	private String type;
+	
+	private int status;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "createtime")
 	private Date createtime;
+	
+	@Transient
+	List<Permission> permissions;
 
 	public Role() {
 	}
@@ -42,6 +53,22 @@ public class Role implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	public Date getCreatetime() {
 		return createtime;
@@ -51,4 +78,17 @@ public class Role implements Serializable {
 		this.createtime = createtime;
 	}
 
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
+	}
+	
 }

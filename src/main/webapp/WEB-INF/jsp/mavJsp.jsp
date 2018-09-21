@@ -6,6 +6,8 @@
 <title>Template</title>
 </head>
 <body>
-欢迎登录系统！${currentUser.username }，系统时间：${ currentTime }
+欢迎登录系统！${currentUser.nickName }，系统时间：${ currentTime }
+
+<p>JSP页面 ${A } ${B }</p>
 </body>
 </html>

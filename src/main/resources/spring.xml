@@ -24,6 +24,6 @@
     </bean>
     
     <import resource="spring-hibernate.xml"/>
-    <!-- <import resource="spring-cache.xml"/> -->
     <import resource="spring-shiro.xml"/>
+    <import resource="spring-shiro-cache.xml"/>
 </beans>
