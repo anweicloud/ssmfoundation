@@ -1,5 +1,4 @@
 package com.anwei.exception;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
 import com.anwei.common.enums.ResultCode;
 import com.anwei.common.result.Result;
 import com.anwei.common.web.HttpUtil;
