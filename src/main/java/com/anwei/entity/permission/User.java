@@ -103,5 +103,15 @@ public class User implements Serializable {
 	public String toString() {
 		return JSON.toJSONString(this);
 	}
+
+	public Date getRegisterTime() {
+		return registerTime;
+	}
+
+	public void setRegisterTime(Date registerTime) {
+		this.registerTime = registerTime;
+	}
+	
+	
 	
 }

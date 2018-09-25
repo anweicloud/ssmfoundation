@@ -10,6 +10,8 @@
     <!-- 扫描service自动注入为bean -->
     <context:component-scan base-package="com.anwei.service.impl,com.anwei.dao.impl" />
     
+    <bean name="springContextUtil" class="com.anwei.common.util.SpringContextUtil" scope="singleton"></bean>
+    
     <!-- 引入属性文件 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
@@ -24,6 +26,6 @@
     </bean>
     
     <import resource="spring-hibernate.xml"/>
-    <import resource="spring-shiro.xml"/>
     <import resource="spring-shiro-cache.xml"/>
+    <import resource="spring-shiro.xml"/>
 </beans>

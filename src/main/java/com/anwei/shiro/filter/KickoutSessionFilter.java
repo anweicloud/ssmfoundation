@@ -87,10 +87,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 		}
 		
 		//从缓存获取用户-Session信息 <UserId,SessionId>
-		LinkedHashMap<Long, Serializable> infoMap = null;
-		if (cache != null) {
-			infoMap = cache.get(ONLINE_USER, LinkedHashMap.class);
-		}
+		LinkedHashMap<Long, Serializable> infoMap = cache.get(ONLINE_USER, LinkedHashMap.class);
 				
 		//如果不存在，创建一个新的
 		infoMap = null == infoMap ? new LinkedHashMap<Long, Serializable>() : infoMap;

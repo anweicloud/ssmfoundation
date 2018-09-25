@@ -6,7 +6,7 @@
 <title>userInfo</title>
 </head>
 <body>
-	用户信息 昵称： ${userInfo.nickName} 用户id：${userInfo.id}
+	用户信息 昵称： ${userInfo.username} 用户id：${userInfo.id}
 	用户电话:${userInfo.telephone } 注册时间： <fmt:formatDate value="${userInfo.registerTime }" pattern="yyyy-MM-dd HH:mm" />
 	<br /> ajax显示全部用户信息：
 	<div id="show_all_user"></div>
@@ -19,7 +19,7 @@
         success : function(data) {
             console.log(data)
             $.each(data, function(i, user) {
-                var p = "<p style='color:red'>昵称:" + user.nickName + "    电话:"
+                var p = "<p style='color:red'>昵称:" + user.username + "    电话:"
                         + user.telephone + "    注册时间:"
                         + user.registerTime + "    id:" + user.id + "</p>";
                 $("#show_all_user").append(p);

@@ -25,7 +25,7 @@ import com.anwei.service.UserService;
  */
 @Controller
 @RequestMapping("user")
-public class UserController {
+public class UserController extends BaseController {
  
 	private static final Logger LOGGER = Logger.getLogger(UserController.class);
 	
@@ -37,11 +37,12 @@ public class UserController {
 		LOGGER.info("查询用户：" + userId);
 		User userInfo = userService.load(userId);
 		modelMap.addAttribute("userInfo", userInfo);
-		return "user/showInfo";
+		return jsp("user/showInfo");
 	}
 	
+	@ResponseBody 
 	@RequestMapping("showInfos")
-	public @ResponseBody List<User> showUserInfos(){
+	public List<User> showUserInfos(){
 		LOGGER.info("查询用户全部用户");
 		List<User> userInfos = userService.findAll();
 		return userInfos;

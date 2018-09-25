@@ -3,6 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 	
+	<!-- 会话Session ID生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+    
 	<!-- 定义缓存管理器 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
 	
@@ -18,26 +21,39 @@
 	    <property name="jedisManager" ref="jedisManager"/>
 	</bean> -->
 	
+	<!-- redis 的缓存 -->
+    <bean id="jedisManager" class="com.anwei.shiro.cache.JedisManager">
+        <property name="jedisPool" ref="jedisPool"/>
+    </bean>
+	
 	<!-- session 创建、删除、查询 -->
     <bean id="jedisShiroSessionRepository" class="com.anwei.shiro.session.JedisShiroSessionRepository" >
          <property name="jedisManager" ref="jedisManager"/>
     </bean>
     
-	<!-- session 校验单个用户是否多次登录 -->
-    <bean id="kickoutSessionFilter" class="com.anwei.shiro.filter.KickoutSessionFilter">  
-        <property name="kickoutUrl" value="/login?kickout"/>  
-    </bean>  
-    <!-- 静态注入 jedisShiroSessionRepository-->
+    <!-- custom shiro session listener -->
+    <bean id="customShiroSessionDAO" class="com.anwei.shiro.dao.CustomShiroSessionDAO">
+        <property name="shiroSessionRepository" ref="jedisShiroSessionRepository"/>
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+    </bean>
+    
+    <!-- 静态注入 jedisShiroSessionRepository -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="staticMethod" value="com.anwei.shiro.filter.KickoutSessionFilter.setShiroSessionRepository"/>
         <property name="arguments" ref="jedisShiroSessionRepository"/>
     </bean>
-	
-	<!-- redis 的缓存 -->
-    <bean id="jedisManager" class="com.anwei.shiro.cache.JedisManager">
-        <property name="jedisPool" ref="jedisPool"/>
+    
+    <!-- session 校验单个用户是否多次登录 -->
+    <bean id="kickoutSessionFilter" class="com.anwei.shiro.filter.KickoutSessionFilter">  
+        <property name="kickoutUrl" value="/login?kickout"/>  
     </bean>
-
+    
+    <!-- 手动操作Session，管理Session -->
+    <bean id="customSessionManager" class="com.anwei.shiro.session.CustomSessionManager">
+        <property name="shiroSessionRepository" ref="jedisShiroSessionRepository"/>
+         <property name="customShiroSessionDAO" ref="customShiroSessionDAO"/>
+    </bean>
+	
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<!-- session的失效时长30分钟，单位毫秒，不配置默认1800000ms -->
 		<property name="globalSessionTimeout" value="1800000" />

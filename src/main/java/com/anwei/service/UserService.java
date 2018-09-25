@@ -12,7 +12,7 @@ import com.anwei.entity.permission.User;
  *
  */
 public interface UserService {
-	User load(int id);
+	User load(long id);
  
 	User get(String id);
 	

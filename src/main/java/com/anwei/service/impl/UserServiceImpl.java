@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 	private GenericDao<User, ?> genericDao;
 
 	@Override
-	public User load(int id) {
+	public User load(long id) {
 		return genericDao.load(User.class, id);
 	}
 
