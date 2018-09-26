@@ -1,3 +1,2 @@
-# sshfoundation
-
-My ssh
+# ssmfoundation
+Spring+Springmvc+Mybatis+Shiro
