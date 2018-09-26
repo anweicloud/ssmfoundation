@@ -1,25 +1,18 @@
 package com.anwei.entity.permission;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import com.alibaba.fastjson.JSON;
-
 import java.util.Date;
 import java.util.List;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * The persistent class for the acct_user database table.
  * 
  */
-@Entity
-@Table(name = "access_role")
-@NamedQuery(name = "Role.findAll", query = "SELECT a FROM Role a")
 public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	private String name;
@@ -28,11 +21,8 @@ public class Role implements Serializable {
 	
 	private int status;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "createtime")
 	private Date createtime;
 	
-	@Transient
 	List<Permission> permissions;
 
 	public Role() {

@@ -1,6 +1,5 @@
 package com.anwei.service;
  
-import java.io.Serializable;
 import java.util.List;
 
 import com.anwei.entity.permission.User;
@@ -12,23 +11,7 @@ import com.anwei.entity.permission.User;
  *
  */
 public interface UserService {
-	User load(long id);
- 
-	User get(String id);
-	
-	User findByUserName(String username);
-	
+	User load(long userId);
 	User login(String username, String password);
-	
 	List<User> findAll();
- 
-	void persist(User entity);
- 
-	Serializable save(User entity);
- 
-	void saveOrUpdate(User entity);
- 
-	void delete(String id);
- 
-	void flush();
 }
