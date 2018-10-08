@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.0">
 	<display-name>SpringmvcMyBatisFoundation</display-name>
 
-	<!-- spring hibernate -->
+	<!-- spring MyBatis -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:spring.xml</param-value>
