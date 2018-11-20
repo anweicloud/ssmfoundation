@@ -7,7 +7,7 @@
         select * from access_user
     </select>
     <select id="login" resultType="User">
-        select * from access_user where username = #{0} and password = #{1}
+        select * from access_user where username = #{username} and password = #{password}
     </select>
     <select id="load" resultType="User">
         select * from access_user where id = #{userId}
